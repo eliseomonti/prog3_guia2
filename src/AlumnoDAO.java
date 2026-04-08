@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlumnoDAO {
 	private Connection conexion;
@@ -41,6 +43,30 @@ public class AlumnoDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<Alumno> listarAlumnos() {
+		List<Alumno> alumnos = new ArrayList<>();
+		String sql = "SELECT * FROM alumnos";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Alumno a = new Alumno(
+						rs.getInt("id"),
+						rs.getString("nombre"),
+						rs.getString("apellido"),
+						rs.getInt("edad"),
+						rs.getString("email")
+				);
+				alumnos.add(a);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return alumnos;
 	}
 
 
