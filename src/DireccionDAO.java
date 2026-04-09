@@ -1,3 +1,5 @@
+import Excepciones.DireccionInexistenteException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -78,11 +80,68 @@ public class DireccionDAO {
 		return direcciones;
 	}
 
+	public boolean actualizarCalle(int id, String calle) throws DireccionInexistenteException {
+		return actualizar("UPDATE direcciones SET calle = ? WHERE id = ?", calle, id);
+	}
 
+	public boolean actualizarAltura(int id, int altura) {
+		String sql = "UPDATE direcciones SET altura = ? WHERE id = ?";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, altura);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
+	private boolean actualizar(String sql, String valor, int id) throws DireccionInexistenteException {
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setString(1, valor);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
+	public void existeDireccion(int id) throws DireccionInexistenteException {
+		String sql = "SELECT id FROM direcciones WHERE id = ?";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				throw new DireccionInexistenteException(id);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-
-
+	public boolean eliminarDireccion(int id) throws DireccionInexistenteException {
+		existeDireccion(id); // si no existe lanza la excepción
+		String sql = "DELETE FROM direcciones WHERE id = ?";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }

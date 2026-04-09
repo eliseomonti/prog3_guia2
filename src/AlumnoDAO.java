@@ -93,18 +93,60 @@ public class AlumnoDAO {
 		return a;
 	}
 
+	public boolean actualizarNombre(int id, String nombre) throws AlumnoInexistenteException{
+		return actualizar("UPDATE alumnos SET nombre = ? WHERE id = ?", nombre, id);
+	}
 
+	public boolean actualizarApellido(int id, String apellido) throws AlumnoInexistenteException{
+		return actualizar("UPDATE alumnos SET apellido = ? WHERE id = ?", apellido, id);
+	}
 
+	public boolean actualizarEdad(int id, int edad) throws AlumnoInexistenteException{
+		String sql = "UPDATE alumnos SET edad = ? WHERE id = ?";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, edad);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
+	public boolean actualizarEmail(int id, String email)throws AlumnoInexistenteException {
+		return actualizar("UPDATE alumnos SET email = ? WHERE id = ?", email, id);
+	}
 
+	private boolean actualizar(String sql, String valor, int id) {
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setString(1, valor);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-
-
-
-
-
-
-
-
+	public boolean eliminarAlumno(int id) throws AlumnoInexistenteException {
+		existeAlumno(id);
+		String sql = "DELETE FROM alumnos WHERE id = ?";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			stmt.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }

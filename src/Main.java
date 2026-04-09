@@ -1,4 +1,5 @@
 import Excepciones.AlumnoInexistenteException;
+import Excepciones.DireccionInexistenteException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,9 +25,10 @@ public class Main {
 			System.out.println("3. Listar todos los alumnos");
 			System.out.println("4. Listar todas las direcciones");
 			System.out.println("5. Listar todas las direcciones de un alumno especifico");
-			System.out.println("6. Actualizar edad de un alumno");
-			System.out.println("7. Eliminar un alumno");
-			System.out.println("8. Eliminar una dirección");
+			System.out.println("6. Actualizar datos de un alumno");
+			System.out.println("7. Actualizar datos de una direccion");
+			System.out.println("8. Eliminar un alumno");
+			System.out.println("9. Eliminar una dirección");
 			System.out.println("0. Salir");
 			System.out.print("Elegí una opción: ");
 			opcion = scanner.nextInt();
@@ -124,6 +126,103 @@ public class Main {
 						System.out.println(d);
 					}
 					break;
+				case 6:
+
+					System.out.print("ID del alumno: ");
+					int idActualizar = scanner.nextInt();
+					scanner.nextLine();
+
+					System.out.println("Que campo desea actualizar?");
+					System.out.println("1. Nombre");
+					System.out.println("2. Apellido");
+					System.out.println("3. Edad");
+					System.out.println("4. Email");
+					System.out.print("Elegí una opción: ");
+					subopcion = scanner.nextInt();
+					scanner.nextLine();
+
+					try {
+						alumnoDAO.existeAlumno(idActualizar);
+
+						switch (subopcion) {
+							case 1:
+								System.out.print("Nuevo nombre: ");
+								alumnoDAO.actualizarNombre(idActualizar, scanner.nextLine());
+								break;
+							case 2:
+								System.out.print("Nuevo apellido: ");
+								alumnoDAO.actualizarApellido(idActualizar, scanner.nextLine());
+								break;
+							case 3:
+								System.out.print("Nueva edad: ");
+								alumnoDAO.actualizarEdad(idActualizar, scanner.nextInt());
+								scanner.nextLine();
+								break;
+							case 4:
+								System.out.print("Nuevo email: ");
+								alumnoDAO.actualizarEmail(idActualizar, scanner.nextLine());
+								break;
+						}
+						System.out.println("Actualizado correctamente.");
+					} catch (AlumnoInexistenteException e) {
+						System.out.println(e.getMessage());
+					}
+					break;
+				case 7:
+					System.out.print("ID de la dirección: ");
+					int idDireccion = scanner.nextInt();
+					scanner.nextLine();
+
+					System.out.println("Que campo desea actualizar?");
+					System.out.println("1. Calle");
+					System.out.println("2. Altura");
+					System.out.print("Elegí una opción: ");
+					subopcion = scanner.nextInt();
+					scanner.nextLine();
+
+					try {
+						switch (subopcion) {
+							case 1:
+								System.out.print("Nueva calle: ");
+								direccionDAO.actualizarCalle(idDireccion, scanner.nextLine());
+								break;
+							case 2:
+								System.out.print("Nueva altura: ");
+								direccionDAO.actualizarAltura(idDireccion, scanner.nextInt());
+								scanner.nextLine();
+								break;
+							default:
+								System.out.println("Opción inválida.");
+						}
+						System.out.println("Dirección actualizada correctamente.");
+					} catch (DireccionInexistenteException e) {
+						System.out.println(e.getMessage());
+					}
+					break;
+				case 8:
+					System.out.print("ID del alumno a eliminar: ");
+					int idEliminarAlumno = scanner.nextInt();
+					scanner.nextLine();
+					try {
+						if (alumnoDAO.eliminarAlumno(idEliminarAlumno)) {
+							System.out.println("Alumno eliminado correctamente.");
+						}
+					} catch (AlumnoInexistenteException e) {
+						System.out.println(e.getMessage());
+					}
+					break;
+				case 9:
+					System.out.print("ID de la dirección a eliminar: ");
+					int idEliminarDireccion = scanner.nextInt();
+					scanner.nextLine();
+					try {
+						if (direccionDAO.eliminarDireccion(idEliminarDireccion)) {
+							System.out.println("Dirección eliminada correctamente.");
+						}
+					} catch (DireccionInexistenteException e) {
+						System.out.println(e.getMessage());
+					}
+					break;
 				case 0:
 					System.out.println("Saliendo...");
 					break;
@@ -132,8 +231,6 @@ public class Main {
 			}
 
 		}while(opcion != 0);
-
-
 
 	}
 
