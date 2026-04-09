@@ -54,6 +54,30 @@ public class DireccionDAO {
 		return direcciones;
 	}
 
+	public List<Direccion> listarDirecciones (){
+		List<Direccion> direcciones = new ArrayList<>();
+
+		String sql = "SELECT * FROM direcciones";
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Direccion d = new Direccion(
+						rs.getInt("id"),
+						rs.getString("calle"),
+						rs.getInt("altura"),
+						rs.getInt("alumno_id")
+				);
+				direcciones.add(d);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return direcciones;
+	}
+
 
 
 

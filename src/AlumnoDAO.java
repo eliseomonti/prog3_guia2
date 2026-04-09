@@ -44,7 +44,7 @@ public class AlumnoDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public List<Alumno> listarAlumnos() {
 		List<Alumno> alumnos = new ArrayList<>();
 		String sql = "SELECT * FROM alumnos";
@@ -67,6 +67,30 @@ public class AlumnoDAO {
 			e.printStackTrace();
 		}
 		return alumnos;
+	}
+
+	public Alumno mostrarAlumno(int id) {
+		String sql = "SELECT * FROM alumnos WHERE id = ?";
+		Alumno a = null;
+		try {
+			PreparedStatement stmt = conexion.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				a = new Alumno(
+						rs.getInt("id"),
+						rs.getString("nombre"),
+						rs.getString("apellido"),
+						rs.getInt("edad"),
+						rs.getString("email")
+				);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return a;
 	}
 
 

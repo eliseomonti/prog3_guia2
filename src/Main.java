@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,7 +24,7 @@ public class Main {
 			System.out.println("3. Listar todos los alumnos");
 			System.out.println("4. Listar todas las direcciones");
 			System.out.println("5. Listar todas las direcciones de un alumno especifico");
-			System.out.println("8. Actualizar edad de un alumno");
+			System.out.println("6. Actualizar edad de un alumno");
 			System.out.println("7. Eliminar un alumno");
 			System.out.println("8. Eliminar una dirección");
 			System.out.println("0. Salir");
@@ -106,7 +107,23 @@ public class Main {
 					}
 					break;
 				case 4:
-					
+					List<Direccion> direcciones = direccionDAO.listarDirecciones();
+
+					for (Direccion d : direcciones){
+						System.out.println(d);
+					}
+					break;
+				case 5:
+					System.out.println("Ingrese id del alumno:");
+					int id = scanner.nextInt();
+					scanner.nextLine();
+					Alumno a = alumnoDAO.mostrarAlumno(id);
+					System.out.println(a);
+					List<Direccion> direcciones2 = direccionDAO.listarDireccionesPorAlumno(id);
+					for (Direccion d : direcciones2){
+						System.out.println(d);
+					}
+					break;
 				case 0:
 					System.out.println("Saliendo...");
 					break;
